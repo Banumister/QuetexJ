@@ -16,7 +16,7 @@
     <groupId>io.github.olyutorskii</groupId>
     <artifactId>quetexj</artifactId>
 
-    <version>0.0.3-SNAPSHOT</version>
+    <version>1.0.2</version>
 
     <packaging>jar</packaging>
     <name>QuetexJ</name>
@@ -386,7 +386,7 @@
                             <report>licenses</report>
                             <report>dependency-info</report>
                             <report>dependencies</report>
-                            <report>dependency-convergence</report>
+                            <!--report>dependency-convergence</report-->
                             <report>plugins</report>
                             <report>plugin-management</report>
                             <report>team</report>
