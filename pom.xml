@@ -386,7 +386,7 @@
                             <report>licenses</report>
                             <report>dependency-info</report>
                             <report>dependencies</report>
-                            <report>dependency-convergence</report>
+                            <!--report>dependency-convergence</report-->
                             <report>plugins</report>
                             <report>plugin-management</report>
                             <report>team</report>

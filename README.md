@@ -21,7 +21,7 @@
 
 * QuetexJ includes log handler that complies with [java.util.logging][LOGGING].
 
-* QuetexJ archive includes test-harness GUI for trial use.
+* QuetexJ archive includes [test-harness][HARNESS] GUI for trial use.
 
 
 ## How to build ##
@@ -48,6 +48,7 @@
 [SCROLLBAR]: https://docs.oracle.com/javase/8/docs/api/javax/swing/JScrollBar.html
 [TEXTAREA]: https://docs.oracle.com/javase/8/docs/api/javax/swing/JTextArea.html
 [MIT]: https://opensource.org/licenses/MIT
+[HARNESS]: https://olyutorskii.github.io/QuetexJ/site/xref-test/index.html
 
 
 --- EOF ---
