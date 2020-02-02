@@ -6,11 +6,11 @@
 
 <!--
     Checkstyle modules
-    for Checkstyle 8.23 or later
+    for Checkstyle 8.29 or later
 
     [ https://checkstyle.org/ ]
 
-    Copyright(c) 2010 olyutorskii
+    Copyright(c) 2019 olyutorskii
 -->
 
 
@@ -20,7 +20,7 @@
     <property name="localeCountry" value="JP" />
     <property name="localeLanguage" value="en" />
     <!--property name="localeLanguage" value="ja" /-->
-    <property name="fileExtensions" value="java, properties, xml, xsd, md, txt" />
+    <property name="fileExtensions" value="java, properties, xml, md, txt" />
     <property name="severity" value="error" />
 
 
@@ -54,7 +54,7 @@
     <!-- Miscellaneous -->
 
     <module name="NewlineAtEndOfFile">
-        <property name="fileExtensions" value="java, properties, xml, xsd, md, txt" />
+        <property name="fileExtensions" value="java, properties, xml, md, txt" />
     </module>
     <module name="OrderedProperties" />
     <module name="Translation" />
@@ -79,6 +79,10 @@
     <!-- Size Violations -->
 
     <module name="FileLength" />
+    <module name="LineLength">
+        <property name="fileExtensions" value="java" />
+        <property name="max" value="78" />
+    </module>
 
 
     <!-- Whitespace -->
@@ -148,6 +152,7 @@
 
         <module name="ArrayTrailingComma" />
         <module name="AvoidInlineConditionals" />
+        <module name="AvoidNoArgumentSuperConstructorCall" />
         <module name="CovariantEquals" />
         <module name="DeclarationOrder" />
         <module name="DefaultComesLast" />
@@ -181,7 +186,9 @@
         <module name="NestedForDepth" />
         <module name="NestedIfDepth" />
         <module name="NestedTryDepth" />
+        <module name="NoArrayTrailingComma" />
         <module name="NoClone" />
+        <module name="NoEnumTrailingComma" />
         <module name="NoFinalizer" />
         <module name="OneStatementPerLine" />
         <module name="OverloadMethodsDeclarationOrder" />
@@ -189,6 +196,7 @@
         <module name="ParameterAssignment" />
         <module name="RequireThis">
             <property name="checkMethods" value="false" />
+            <property name="validateOnlyOverlapping" value="false" />
         </module>
         <module name="ReturnCount">
             <property name="max" value="5" />
@@ -200,6 +208,7 @@
         <module name="SuperClone" />
         <module name="SuperFinalize" />
         <module name="UnnecessaryParentheses" />
+        <module name="UnnecessarySemicolonAfterTypeMemberDeclaration" />
         <module name="UnnecessarySemicolonInEnumeration" />
         <module name="UnnecessarySemicolonInTryWithResources" />
         <module name="VariableDeclarationUsageDistance" />
@@ -221,6 +230,8 @@
 
         <module name="AtclauseOrder" />
         <module name="InvalidJavadocPosition" />
+        <module name="JavadocBlockTagLocation" />
+        <module name="JavadocContentLocationCheck" />
         <module name="JavadocMethod" />
         <module name="JavadocParagraph" />
         <module name="JavadocStyle">
@@ -328,9 +339,6 @@
 
         <module name="AnonInnerLength" />
         <module name="ExecutableStatementCount" />
-        <module name="LineLength">
-            <property name="max" value="78" />
-        </module>
         <module name="MethodCount" />
         <module name="MethodLength" />
         <module name="OuterTypeNumber" />
