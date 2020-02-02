@@ -93,7 +93,7 @@
         <spotbugs.jvmArgs>-Duser.language=en</spotbugs.jvmArgs>
 
         <checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
-        <checkstyleruntime.version>8.23</checkstyleruntime.version>
+        <checkstyleruntime.version>8.29</checkstyleruntime.version>
         <checkstyle.config.location>config/checkstyle/checkstyle.xml</checkstyle.config.location>
         <checkstyle.suppressions.location>config/checkstyle/checkstyle-suppressions.xml</checkstyle.suppressions.location>
         <checkstyle.enable.rss>false</checkstyle.enable.rss>
