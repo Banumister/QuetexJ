@@ -1,5 +1,9 @@
 # QuetexJ #
 
+![Java CI with Maven](https://github.com/olyutorskii/QuetexJ/workflows/Java%20CI%20with%20Maven/badge.svg)
+![CodeQL](https://github.com/olyutorskii/QuetexJ/workflows/CodeQL/badge.svg)
+
+-----------------------------------------------------------------------
 
 ## What is QuetexJ ? ##
 
