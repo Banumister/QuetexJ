@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add GitHub Actions (JavaCI and CodeQL).
+
+### Changed
+- Change CHANGELOG.md format to keepchangelog.com style.
+
+### Security
+- responding to junit security issue GHSA-269g-pwp5-87pp
+
 
 ## [1.0.4] - 2020-02-03
 
