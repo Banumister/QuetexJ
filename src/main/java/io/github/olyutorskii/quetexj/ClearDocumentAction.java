@@ -15,7 +15,7 @@ import javax.swing.text.Document;
  * Clear document action.
  */
 @SuppressWarnings("serial")
-class ClearDocumentAction extends AbstractAction{
+class ClearDocumentAction extends AbstractAction {
 
     private final Document document;
 
@@ -25,7 +25,7 @@ class ClearDocumentAction extends AbstractAction{
      *
      * @param document target document
      */
-    ClearDocumentAction(Document document){
+    ClearDocumentAction(Document document) {
         super();
 
         Objects.requireNonNull(document);
@@ -37,11 +37,11 @@ class ClearDocumentAction extends AbstractAction{
     /**
      * Receive clear document event.
      */
-    private void eventClearDocument(){
+    private void eventClearDocument() {
         int len = this.document.getLength();
-        try{
+        try {
             this.document.remove(0, len);
-        }catch(BadLocationException e){
+        } catch (BadLocationException e) {
             assert false;
         }
 
@@ -54,7 +54,7 @@ class ClearDocumentAction extends AbstractAction{
      * @param ev {@inheritDoc}
      */
     @Override
-    public void actionPerformed(ActionEvent ev){
+    public void actionPerformed(ActionEvent ev) {
         // assert EventQueue.isDispatchThread();
         eventClearDocument();
         return;
