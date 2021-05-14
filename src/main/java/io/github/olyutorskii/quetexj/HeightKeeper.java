@@ -86,8 +86,8 @@ public class HeightKeeper {
 
         Objects.requireNonNull(rangeModel);
 
-        if(newHeight <= 0) throw new IllegalArgumentException();
-        if(heightLimit <= newHeight) throw new IllegalArgumentException();
+        if (newHeight <= 0) throw new IllegalArgumentException();
+        if (heightLimit <= newHeight) throw new IllegalArgumentException();
 
         this.textComp = textComp;
         this.textComp.addComponentListener(this.watcher);
@@ -105,7 +105,7 @@ public class HeightKeeper {
      *
      * @return text component
      */
-    public JTextComponent getTextComponent(){
+    public JTextComponent getTextComponent() {
         return this.textComp;
     }
 
@@ -114,7 +114,7 @@ public class HeightKeeper {
      *
      * @return BoundedRangeModel
      */
-    public BoundedRangeModel getBoundedRangeModel(){
+    public BoundedRangeModel getBoundedRangeModel() {
         return this.rangeModel;
     }
 
@@ -123,7 +123,7 @@ public class HeightKeeper {
      *
      * @return height limit
      */
-    public int getHeightLimit(){
+    public int getHeightLimit() {
         return this.heightLimit;
     }
 
@@ -132,7 +132,7 @@ public class HeightKeeper {
      *
      * @return new height
      */
-    public int getNewHeight(){
+    public int getNewHeight() {
         return this.newHeight;
     }
 
@@ -149,22 +149,22 @@ public class HeightKeeper {
      * @throws IllegalArgumentException illegal integer argument
      */
     public void setConditions(int heightLimitArg, int newHeightArg)
-            throws IllegalArgumentException{
-        if(newHeightArg <= 0){
+            throws IllegalArgumentException {
+        if (newHeightArg <= 0) {
             throw new IllegalArgumentException();
         }
-        if(heightLimitArg <= newHeightArg){
+        if (heightLimitArg <= newHeightArg) {
             throw new IllegalArgumentException();
         }
 
-        synchronized(this.condLock){
+        synchronized (this.condLock) {
             this.heightLimit = heightLimitArg;
             this.newHeight = newHeightArg;
         }
 
-        if(EventQueue.isDispatchThread()){
+        if (EventQueue.isDispatchThread()) {
             eventResized();
-        }else{
+        } else {
             EventQueue.invokeLater(() -> {
                 eventResized();
             });
@@ -178,16 +178,16 @@ public class HeightKeeper {
      *
      * <p>If component height is smaller than height limit, do nothing.
      */
-    void eventResized(){
+    void eventResized() {
         int condHeightLimit;
         int condNewHeight;
-        synchronized(this.condLock){
+        synchronized (this.condLock) {
             condHeightLimit = this.heightLimit;
             condNewHeight   = this.newHeight;
         }
 
         int compHeight = this.textComp.getHeight();
-        if(compHeight < condHeightLimit) return;
+        if (compHeight < condHeightLimit) return;
 
         int chopHeight = compHeight - condNewHeight;
         int oldRangeVal = this.rangeModel.getValue();
@@ -208,7 +208,7 @@ public class HeightKeeper {
      *
      * @param chopRegionHeight Chopping height from ceiling.
      */
-    private void chopHeadHeightRowBounds(int chopRegionHeight){
+    private void chopHeadHeightRowBounds(int chopRegionHeight) {
         int docLastPos = chopHeightToLinedOffset(chopRegionHeight);
         chopHeadHeightByDocPos(docLastPos);
         return;
@@ -221,7 +221,7 @@ public class HeightKeeper {
      * @param chopHeight head chop height in text component
      * @return offset in Document model. -1 if undefined.
      */
-    private int chopHeightToLinedOffset(int chopHeight){
+    private int chopHeightToLinedOffset(int chopHeight) {
         int chopWidth  = this.textComp.getWidth();
 
         // Diagonal corner of shrink region
@@ -241,18 +241,18 @@ public class HeightKeeper {
      *
      * @param docLastPos last char position of chop-text in Document model.
      */
-    private void chopHeadHeightByDocPos(int docLastPos){
-        if(docLastPos < 0) return;
+    private void chopHeadHeightByDocPos(int docLastPos) {
+        if (docLastPos < 0) return;
 
         Document document = this.textComp.getDocument();
         int docLength = document.getLength();
-        if(docLength <= 0) return;
+        if (docLength <= 0) return;
 
         int regionLength = Integer.min(docLastPos + 1, docLength);
 
-        try{
+        try {
             document.remove(0, regionLength);
-        }catch(BadLocationException e){
+        } catch (BadLocationException e) {
             assert false;
         }
 
@@ -266,7 +266,7 @@ public class HeightKeeper {
      * @param oldRangeVal BoundedRangeModel value before chopping
      * @return adjusted BoundedRangeModel value.
      */
-    private int adjustBoundedRangeModel(int chopHeight, int oldRangeVal){
+    private int adjustBoundedRangeModel(int chopHeight, int oldRangeVal) {
         int realChopHeight = getRealChopHeight(chopHeight);
         int newRangeVal = oldRangeVal - realChopHeight;
         this.rangeModel.setValue(newRangeVal);
@@ -281,7 +281,7 @@ public class HeightKeeper {
      * @param chopHeight chop height
      * @return row-bounds height
      */
-    private int getRealChopHeight(int chopHeight){
+    private int getRealChopHeight(int chopHeight) {
         int insetsTop = this.textComp.getInsets().top;
         int bodyHeight = chopHeight - insetsTop;
         int rowHeight = getRowHeight();
@@ -298,7 +298,7 @@ public class HeightKeeper {
      * @return row height
      * @see JTextArea#getRowHeight()
      */
-    private int getRowHeight(){
+    private int getRowHeight() {
         int result =
                 this.textComp.getScrollableUnitIncrement(
                         DMY_RECT, SwingConstants.VERTICAL, 0);
@@ -309,12 +309,12 @@ public class HeightKeeper {
     /**
      * Component resize watcher.
      */
-    private class SizeWatcher extends ComponentAdapter{
+    private class SizeWatcher extends ComponentAdapter {
 
         /**
          * Constructor.
          */
-        SizeWatcher(){
+        SizeWatcher() {
             super();
             return;
         }

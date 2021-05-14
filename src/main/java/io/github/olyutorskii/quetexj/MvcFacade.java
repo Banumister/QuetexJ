@@ -37,7 +37,7 @@ public class MvcFacade {
      * <p>PlainDocument, DefaultBoundedRangeModel, and ToggleButtonModel
      * instances are used as default model.
      */
-    public MvcFacade(){
+    public MvcFacade() {
         this(
                 new PlainDocument(),
                 new DefaultBoundedRangeModel(),
@@ -55,7 +55,7 @@ public class MvcFacade {
     public MvcFacade(
             Document document,
             BoundedRangeModel vertRangeModel,
-            ToggleButtonModel trackSwitchButtonModel){
+            ToggleButtonModel trackSwitchButtonModel) {
         super();
 
         this.document = document;
@@ -82,7 +82,7 @@ public class MvcFacade {
      * @param doc document model
      * @return text area
      */
-    private static JTextArea buildTextArea(Document doc){
+    private static JTextArea buildTextArea(Document doc) {
         JTextArea textComp = new JTextArea();
 
         textComp.setEditable(false);
@@ -103,7 +103,7 @@ public class MvcFacade {
      *
      * @return document model
      */
-    public Document getDocument(){
+    public Document getDocument() {
         return this.document;
     }
 
@@ -112,7 +112,7 @@ public class MvcFacade {
      *
      * @return text area view
      */
-    public JTextArea getTextArea(){
+    public JTextArea getTextArea() {
         return this.textArea;
     }
 
@@ -121,7 +121,7 @@ public class MvcFacade {
      *
      * @return vertical BoundedRangeModel
      */
-    public BoundedRangeModel getVerticalBoundedRangeModel(){
+    public BoundedRangeModel getVerticalBoundedRangeModel() {
         return this.vertRangeModel;
     }
 
@@ -130,7 +130,7 @@ public class MvcFacade {
      *
      * @return HeightKeeper instance
      */
-    public HeightKeeper getHeightKeeper(){
+    public HeightKeeper getHeightKeeper() {
         return this.heightKeeper;
     }
 
@@ -139,7 +139,7 @@ public class MvcFacade {
      *
      * @return MaxTracker instance
      */
-    public MaxTracker getMaxTracker(){
+    public MaxTracker getMaxTracker() {
         return this.maxTracker;
     }
 
@@ -148,7 +148,7 @@ public class MvcFacade {
      *
      * @return tracking on-off switch ButtonModel
      */
-    public ToggleButtonModel getTrackSwitchButtonModel(){
+    public ToggleButtonModel getTrackSwitchButtonModel() {
         return this.trackSwitchButtonModel;
     }
 
@@ -156,7 +156,7 @@ public class MvcFacade {
      * Return clear document Action.
      * @return clear document Action
      */
-    public Action getClearAction(){
+    public Action getClearAction() {
         return this.clearAction;
     }
 

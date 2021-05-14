@@ -23,7 +23,7 @@ import javax.swing.text.PlainDocument;
  *
  * <p>Logging is supported from both EDT(Event-Dispatch-Thread) and non-EDT.
  */
-public class SwingLogHandler extends Handler{
+public class SwingLogHandler extends Handler {
 
     private final Document document;
     private final Queue<String> msgQueue;
@@ -35,7 +35,7 @@ public class SwingLogHandler extends Handler{
      *
      * <p>PlainDocument is prepared.
      */
-    public SwingLogHandler(){
+    public SwingLogHandler() {
         this(new PlainDocument());
         return;
     }
@@ -47,7 +47,7 @@ public class SwingLogHandler extends Handler{
      *
      * @param document Document model of Swing text component.
      */
-    public SwingLogHandler(Document document){
+    public SwingLogHandler(Document document) {
         super();
 
         Objects.requireNonNull(document);
@@ -71,7 +71,7 @@ public class SwingLogHandler extends Handler{
      *
      * @return document
      */
-    public Document getDocument(){
+    public Document getDocument() {
         return this.document;
     }
 
@@ -80,18 +80,18 @@ public class SwingLogHandler extends Handler{
      *
      * <p>This is thread-safe.
      *
-     * @param record {@inheritDoc}
+     * @param logRec {@inheritDoc}
      */
     @Override
-    public synchronized void publish(LogRecord record){
-        if(record == null) return;
+    public synchronized void publish(LogRecord logRec) {
+        if (logRec == null) return;
 
-        if(!isLoggable(record)){
+        if (!isLoggable(logRec)) {
             return;
         }
 
         Formatter formatter = getFormatter();
-        String message = formatter.format(record);
+        String message = formatter.format(logRec);
 
         publish(message);
 
@@ -105,13 +105,13 @@ public class SwingLogHandler extends Handler{
      *
      * @param message log message
      */
-    private void publish(String message){
+    private void publish(String message) {
         boolean offered = this.msgQueue.offer(message);
         assert offered;
 
-        if(EventQueue.isDispatchThread()){
+        if (EventQueue.isDispatchThread()) {
             this.transferTask.transferQueueToDoc();
-        }else{
+        } else {
             EventQueue.invokeLater(this.transferTask);
         }
 
@@ -122,7 +122,7 @@ public class SwingLogHandler extends Handler{
      * {@inheritDoc}
      */
     @Override
-    public void flush(){
+    public void flush() {
         return;
     }
 
@@ -132,7 +132,7 @@ public class SwingLogHandler extends Handler{
      * @throws SecurityException {@inheritDoc}
      */
     @Override
-    public void close() throws SecurityException{
+    public void close() throws SecurityException {
         setLevel(Level.OFF);
         flush();
         return;
@@ -144,7 +144,7 @@ public class SwingLogHandler extends Handler{
      *
      * <p>EDT only supported.
      */
-    private class LogTransferTask implements Runnable{
+    private class LogTransferTask implements Runnable {
 
         private final Queue<String> queue;
         private final StringBuilder msgBuf;
@@ -155,7 +155,7 @@ public class SwingLogHandler extends Handler{
          *
          * @param queue log message queue
          */
-        LogTransferTask(Queue<String> queue){
+        LogTransferTask(Queue<String> queue) {
             super();
 
             this.queue = queue;
@@ -169,7 +169,7 @@ public class SwingLogHandler extends Handler{
          * {@inheritDoc}
          */
         @Override
-        public void run(){
+        public void run() {
             transferQueueToDoc();
             return;
         }
@@ -177,21 +177,21 @@ public class SwingLogHandler extends Handler{
         /**
          * Transfer message from Queue to Document.
          */
-        void transferQueueToDoc(){
+        void transferQueueToDoc() {
             int queueSize = this.queue.size();
-            if(queueSize == 1){   // common case
+            if (queueSize == 1) {   // common case
                 String msg = this.queue.poll();
                 appendToDocument(msg);
                 return;
-            }else if(queueSize <= 0){
+            } else if (queueSize <= 0) {
                 return;
             }
 
             this.msgBuf.setLength(0);
 
-            while(!this.queue.isEmpty()){
+            while (!this.queue.isEmpty()) {
                 String msg = this.queue.poll();
-                if(msg == null) break;
+                if (msg == null) break;
                 this.msgBuf.append(msg);
             }
 
@@ -207,17 +207,17 @@ public class SwingLogHandler extends Handler{
          *
          * @param logMessage text
          */
-        private void appendToDocument(CharSequence logMessage){
-            if(logMessage == null) return;
-            if(logMessage.length() <= 0) return;
+        private void appendToDocument(CharSequence logMessage) {
+            if (logMessage == null) return;
+            if (logMessage.length() <= 0) return;
 
             Document doc = getDocument();
             String str = logMessage.toString();
             int insertPt = doc.getLength();
 
-            try{
+            try {
                 doc.insertString(insertPt, str, null);
-            }catch(BadLocationException e){
+            } catch (BadLocationException e) {
                 assert false;
             }
 
