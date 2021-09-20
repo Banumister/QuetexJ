@@ -14,12 +14,19 @@ import javax.swing.DefaultButtonModel;
  * Automatic tracker that always tracks last position of BoundedRangeModel.
  * It's usefull for JScrollBar or JSlider view.
  *
- * <p>Tracking mode switching is supported by ButtonModel(optional).
+ * <p>&quot;Tracking mode switching&quot; is supported by ButtonModel(optional).
  * If ButtonModel is selected, it is a tracking mode.
  *
- * <p>Tracking mode switch is also supported
+ * <p>&quot;Tracking mode switching&quot; is also supported
  * by special BoundedRangeModel operations.
  * (Just sliding knob to max manually)
+ *
+ * <p>BoundedRangeModel will fire event
+ * by resizing view content (non-adjusting)
+ * or adjusting knob of scroll bar. (adjusting)
+ *
+ * @see javax.swing.BoundedRangeModel
+ * @see javax.swing.JScrollBar
  */
 public class MaxTracker {
 
@@ -30,12 +37,14 @@ public class MaxTracker {
     private final BoundedRangeModel rangeModel;
     private final ButtonModel trackModeModel;
 
-    /** Knob operation position when tracking-start . */
+    /** Knob operation position when tracking-start. */
     private int trackStartPos;
 
 
     /**
      * Constructor.
+     *
+     * <p>BoundedRangeModel watching begins.
      *
      * @param rangeModel BoundedRangeModel.
      */
@@ -46,6 +55,8 @@ public class MaxTracker {
 
     /**
      * Constructor.
+     *
+     * <p>BoundedRangeModel watching begins.
      *
      * @param rangeModel BoundedRangeModel.
      * @param trackModeModel ButtonModel for tracking mode.
@@ -91,25 +102,15 @@ public class MaxTracker {
     }
 
     /**
-     * Return tracking mode by ButtonModel.
-     *
-     * <p>If ButtonModel is selected, it is a tracking mode.
-     *
-     * @return Return true if tracking mode.
-     */
-    public boolean isTrackingMode() {
-        boolean result = this.trackModeModel.isSelected();
-        return result;
-    }
-
-    /**
-     * Set tracking mode to ButtonModel.
+     * Set tracking mode status.
      *
      * <p>It will fire ItemEvent from ButtonModel.
      *
      * <p>If ButtonModel is selected, it is a tracking mode.
      *
      * <p>If tracking mode is not changed, do nothing.
+     *
+     * <p>EDT and non-EDT both supported.
      *
      * @param tracking tracking mode
      */
@@ -125,9 +126,11 @@ public class MaxTracker {
     }
 
     /**
-     * Set tracking mode to ButtonModel.
+     * Set tracking mode status to ButtonModel.
      *
-     * <p>(EDT only.)
+     * <p>If tracking mode status is not changed, do nothing.
+     *
+     * <p>(EDT only)
      *
      * @param tracking tracking mode
      */
@@ -141,9 +144,52 @@ public class MaxTracker {
     }
 
     /**
-     * Return wheteher BoundedRangeModel is currently adjusted with mouse.
+     * Return tracking mode status.
+     *
+     * <p>If ButtonModel is selected, it is a tracking mode.
+     *
+     * @return Return true if tracking mode.
+     */
+    public boolean isTrackingMode() {
+        boolean result = this.trackModeModel.isSelected();
+        return result;
+    }
+
+    /**
+     * Receive knob-adjusting event from BoundedRangeModel.
+     */
+    private void eventBoundedRangeChanged() {
+        if (isHandAdjusting()) {
+            checkTrackingByKnob();
+            return;
+        } else {
+            resetTrackStartPos();
+        }
+
+        if (isTrackingMode()) {
+            forceKnobTouchMax();
+        }
+
+        return;
+    }
+
+    /**
+     * Receive tracking-mode-switching event from ButtonModel.
+     */
+    private void eventTrackModeChanged() {
+        if (isTrackingMode()) {
+            forceKnobTouchMax();
+        }
+        return;
+    }
+
+    /**
+     * Return wheteher BoundedRangeModel is currently adjusted
+     * with knob and mouse.
      *
      * @return Return true if adjusting.
+     *
+     * @see javax.swing.BoundedRangeModel#setValueIsAdjusting(boolean)
      */
     private boolean isHandAdjusting() {
         boolean result = this.rangeModel.getValueIsAdjusting();
@@ -165,18 +211,26 @@ public class MaxTracker {
     }
 
     /**
-     * Set track-start operation position.
+     * Determine if tracking mode has been activated
+     * by BoundedRangeModel operation.
+     *
+     * <p>If knob touches max in BoundedRangeModel,
+     * tracking mode is activated.
+     *
+     * <p>Tracking mode is deactivated if knob detaches max again.
+     *
+     * <p>While holding knob by mouse after touching max,
+     * tracking mode is not changed.
      */
-    private void setTrackStartPos() {
-        this.trackStartPos = this.rangeModel.getValue();
-        return;
-    }
+    private void checkTrackingByKnob() {
+        boolean knobTouchMax = isKnobTouchMax();
+        if (knobTouchMax) {
+            setTrackingMode(true);
+            markTrackStartPos();
+        } else if (!keepingTrackStartPos()) {
+            setTrackingMode(false);
+        }
 
-    /**
-     * Reset track-start operation position.
-     */
-    private void resetTrackStartPos() {
-        this.trackStartPos = VAL_INVALID;
         return;
     }
 
@@ -189,6 +243,22 @@ public class MaxTracker {
         int modelVal = this.rangeModel.getValue();
         boolean result = this.trackStartPos == modelVal;
         return result;
+    }
+
+    /**
+     * Mark track-start operation position.
+     */
+    private void markTrackStartPos() {
+        this.trackStartPos = this.rangeModel.getValue();
+        return;
+    }
+
+    /**
+     * Reset track-start operation position.
+     */
+    private void resetTrackStartPos() {
+        this.trackStartPos = VAL_INVALID;
+        return;
     }
 
     /**
@@ -208,60 +278,6 @@ public class MaxTracker {
         int newVal = max - extent;
         this.rangeModel.setValue(newVal);
 
-        return;
-    }
-
-    /**
-     * Determine if tracking mode has been activated
-     * by BoundedRangeModel operation.
-     *
-     * <p>If knob touches max in BoundedRangeModel,
-     * tracking mode is activated.
-     *
-     * <p>Tracking mode is deactivated if knob detaches max again.
-     *
-     * <p>While holding knob by mouse after touching max,
-     * tracking mode is not changed.
-     */
-    private void checkTrackingByKnob() {
-        boolean knobTouchMax = isKnobTouchMax();
-        if (knobTouchMax) {
-            setTrackingMode(true);
-            setTrackStartPos();
-        } else if (!keepingTrackStartPos()) {
-            setTrackingMode(false);
-        }
-
-        return;
-    }
-
-    /**
-     * Receive ChangeListener event from BoundedRangeModel.
-     */
-    private void eventBoundedRangeChanged() {
-        if (isHandAdjusting()) {
-            checkTrackingByKnob();
-            return;
-        } else {
-            resetTrackStartPos();
-        }
-
-        if (isTrackingMode()) {
-            forceKnobTouchMax();
-        }
-
-        return;
-    }
-
-    /**
-     * Receive ItemListener event from ButtonModel.
-     *
-     * <p>It means changing track mode event with checkbutton-view.
-     */
-    private void eventTrackModeChanged() {
-        if (isTrackingMode()) {
-            forceKnobTouchMax();
-        }
         return;
     }
 
