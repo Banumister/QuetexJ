@@ -40,6 +40,11 @@ public class MaxTracker {
     /** Knob operation position when tracking-start. */
     private int trackStartPos;
 
+    private int oldMin    = -1;
+    private int oldMax    = -1;
+    private int oldExtent = -1;
+    private boolean isModelChanged = true;
+
 
     /**
      * Constructor.
@@ -181,6 +186,40 @@ public class MaxTracker {
             forceKnobTouchMax();
         }
         return;
+    }
+
+    /**
+     * Estimate the cause of ChangeEvent from BoundedRangeModel.
+     *
+     * <ul>
+     * <li>cause 1: By Model changing.
+     * <li>cause 2: By UI(View) operation.
+     * </ul>
+     *
+     * UI operation includes dragging knob,
+     * and (unit|block)(inc|dec)rement buttons clicking.
+     *
+     * @return
+     */
+    private boolean checkEventByModelChange() {
+        int newMin    = this.rangeModel.getMinimum();
+        int newMax    = this.rangeModel.getMaximum();
+        int newExtent = this.rangeModel.getExtent();
+
+        boolean result;
+        if (this.rangeModel.getValueIsAdjusting()) {
+            result = false;
+        } else {
+            result =   newMin    != this.oldMin
+                    || newMax    != this.oldMax
+                    || newExtent != this.oldExtent;
+        }
+
+        this.oldMin    = newMin;
+        this.oldMax    = newMax;
+        this.oldExtent = newExtent;
+
+        return result;
     }
 
     /**
