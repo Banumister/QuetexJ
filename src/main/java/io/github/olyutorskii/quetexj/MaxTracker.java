@@ -89,6 +89,20 @@ public class MaxTracker {
 
 
     /**
+     * Get maximum limit value of {@link BoundedRangeModel}.
+     *
+     * @return limit value
+     */
+    private int getMaxLimitVal() {
+        int max    = this.rangeModel.getMaximum();
+        int extent = this.rangeModel.getExtent();
+        int limit = max - extent;
+
+        return limit;
+    }
+
+
+    /**
      * Get associated BoundedRangeModel.
      *
      * @return BoundedRangeModel
@@ -120,31 +134,16 @@ public class MaxTracker {
      * @param tracking tracking mode
      */
     public void setTrackingMode(boolean tracking) {
-        if (EventQueue.isDispatchThread()) {
-            setTrackingModeImpl(tracking);
-        } else {
-            EventQueue.invokeLater(() -> {
-                setTrackingModeImpl(tracking);
-            });
-        }
-        return;
-    }
-
-    /**
-     * Set tracking mode status to ButtonModel.
-     *
-     * <p>If tracking mode status is not changed, do nothing.
-     *
-     * <p>(EDT only)
-     *
-     * @param tracking tracking mode
-     */
-    private void setTrackingModeImpl(boolean tracking) {
         boolean oldCond = isTrackingMode();
         if (tracking == oldCond) return;
 
-        this.trackModeModel.setSelected(tracking);
-
+        if (EventQueue.isDispatchThread()) {
+            this.trackModeModel.setSelected(tracking);
+        } else {
+            EventQueue.invokeLater(() -> {
+                this.trackModeModel.setSelected(tracking);
+            });
+        }
         return;
     }
 
@@ -164,6 +163,8 @@ public class MaxTracker {
      * Receive knob-adjusting event from BoundedRangeModel.
      */
     private void eventBoundedRangeChanged() {
+        assert EventQueue.isDispatchThread();
+
         if (isHandAdjusting()) {
             checkTrackingByKnob();
             return;
@@ -171,9 +172,11 @@ public class MaxTracker {
             resetTrackStartPos();
         }
 
-        if (isTrackingMode()) {
-            forceKnobTouchMax();
-        }
+        if (! isTrackingMode()) return;
+        if (isKnobTouchMax()) return;
+
+        int newVal = getMaxLimitVal();
+        this.rangeModel.setValue(newVal);
 
         return;
     }
@@ -182,9 +185,14 @@ public class MaxTracker {
      * Receive tracking-mode-switching event from ButtonModel.
      */
     private void eventTrackModeChanged() {
-        if (isTrackingMode()) {
-            forceKnobTouchMax();
-        }
+        assert EventQueue.isDispatchThread();
+
+        if (! isTrackingMode()) return;        
+        if (isKnobTouchMax()) return;
+        
+        int newVal = getMaxLimitVal();
+        this.rangeModel.setValue(newVal);
+
         return;
     }
 
@@ -297,26 +305,6 @@ public class MaxTracker {
      */
     private void resetTrackStartPos() {
         this.trackStartPos = VAL_INVALID;
-        return;
-    }
-
-    /**
-     * Force knob to be touching max in BoundedRangeModel.
-     *
-     * <ul>
-     * <li>If knob already touches max, do nothing.
-     * <li>If adjusting knob (by hand), do nothing.
-     * </ul>
-     */
-    private void forceKnobTouchMax() {
-        if (isKnobTouchMax()) return;
-        if (isHandAdjusting()) return;
-
-        int max    = this.rangeModel.getMaximum();
-        int extent = this.rangeModel.getExtent();
-        int newVal = max - extent;
-        this.rangeModel.setValue(newVal);
-
         return;
     }
 
