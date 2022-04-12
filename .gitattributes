@@ -5,8 +5,6 @@
 *.java text diff=java
 
 *.xml text eol=lf
-*.xsd text eol=lf
-*.dtd text eol=lf
 *.properties text eol=lf
 
 *.txt text
