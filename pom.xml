@@ -16,7 +16,7 @@
     <groupId>io.github.olyutorskii</groupId>
     <artifactId>quetexj</artifactId>
 
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.8</version>
 
     <packaging>jar</packaging>
     <name>QuetexJ</name>
