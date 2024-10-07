@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.0.10] - 2024-10-07
+
 ### Fixed
 - Update SoftBugs for JDK23
 - Update Maven plugins
@@ -44,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial Release
 
 
-[Unreleased]: https://github.com/olyutorskii/QuetexJ/compare/v1.0.8...HEAD
+[Unreleased]: https://github.com/olyutorskii/QuetexJ/compare/v1.0.10...HEAD
+[1.0.10]: https://github.com/olyutorskii/QuetexJ/compare/v1.0.8...v1.0.10
 [1.0.8]: https://github.com/olyutorskii/QuetexJ/compare/v1.0.6...v1.0.8
 [1.0.6]: https://github.com/olyutorskii/QuetexJ/compare/v1.0.4...v1.0.6
 [1.0.4]: https://github.com/olyutorskii/QuetexJ/compare/v1.0.2...v1.0.4
