@@ -154,6 +154,7 @@ public class MvcFacade {
 
     /**
      * Return clear document Action.
+     *
      * @return clear document Action
      */
     public Action getClearAction() {
