@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Update SoftBugs for JDK23
+- Update Maven plugins
 
 
 ## [1.0.8] - 2022-10-10
